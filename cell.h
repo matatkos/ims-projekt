@@ -1,6 +1,3 @@
-//
-// Created by matus on 9.12.2023.
-//
 
 #ifndef CELL_H
 #define CELL_H
@@ -20,4 +17,5 @@ public:
     int y;
 };
 
-#endif
+#endif //CELL_H
+

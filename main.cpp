@@ -1,6 +1,9 @@
 #include <iostream>
 #include "grid.h"
 #include "cell.h"
+#include "image.h"
+
+void display();
 
 int main(int argc, char** argv) {
     srand(time(NULL));
@@ -18,6 +21,15 @@ int main(int argc, char** argv) {
                         atoi(argv[6]),
                         160000);
     }
+    grid.init_present_grid();
+    Image image(grid.width, grid.width);
 
+    int month = 0;
+    for(int i = 0; i < 48; ++i){
+        month = i % 12;
 
+        grid.get_future_grid(month);
+        image.create_image(grid, 100, month, true);
+    }
+    return 0;
 }

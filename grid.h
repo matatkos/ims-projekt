@@ -15,7 +15,8 @@ public:
     Grid(int width){
         int size = width * width;
         this->width = width;
-
+        present_grid.reserve(size);
+        future_grid.reserve(size);
     }
     void init_present_grid();
     void print_present_grid();

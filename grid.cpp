@@ -149,6 +149,7 @@ void Grid::get_future_grid(int month) {
         for(int j = 0; j < this->width; j++){
             order = this->order_coords(i,j);
             state = present_grid[order].state;
+
             new_state = state + fertility * state + mortality * pow(state, 2) + diffusion_operator(i, j);
             if (new_state < 0){
                 new_state = 0;
@@ -156,6 +157,7 @@ void Grid::get_future_grid(int month) {
             this->future_grid[order].state = new_state;
         }
     }
+
     copy_future_to_present();
 }
 
