@@ -1,0 +1,25 @@
+Na výpočet parametrov `reproduction_rate` a `migration_param` podľa vášho matematického modelu môžeme použiť nasledujúci prístup:
+
+1. **Výpočet reproduction_rate (miera reprodukcie):**
+   - Váš model definuje rastovú rýchlosť `r` ako funkciu environmentálnych faktorov ako vlhkosť pôdy `V`, teplota `T`, salinita `S`, pH pôdy a obsah organických látok `O`.
+   - Miera reprodukcie `reproduction_rate` by mohla byť priamo úmerná rastovej rýchlosti `r`. Teda, môžete vypočítať `reproduction_rate` ako hodnotu `r` z vášho modelu, kde `r` je vypočítané podľa uvedených faktorov.
+   - Napríklad, ak máte určené optimálne hodnoty pre `V`, `T`, `S`, `pH` a `O`, môžete ich dosadiť do rovnice pre `r` a získať tak hodnotu `reproduction_rate`.
+
+2. **Výpočet migration_param (migračný parameter):**
+   - Migračný parameter `migration_param` by mohol byť odvodený z faktorov, ktoré ovplyvňujú schopnosť rastliny šíriť sa alebo migrovať. V prípade Pohánkovca by to mohli byť faktory ako hustota porastu `H` alebo iné environmentálne faktory.
+   - Môžete napríklad vytvoriť funkciu, ktorá zohľadňuje hustotu porastu a možno aj ďalšie faktory ako vlhkosť alebo teplotu, na určenie `migration_param`. Tento parameter by mohol byť vyšší v podmienkach, kde je menšia hustota porastu a vhodné environmentálne podmienky, čo umožňuje rastline lepšie sa šíriť.
+
+**Príklad:**
+Predpokladajme, že máte určené nasledujúce hodnoty pre váš model:
+- Vlhkosť pôdy `V` = 40%
+- Teplota `T` = 15°C
+- Salinita `S` = 2 dS/m
+- pH pôdy = 7.0
+- Obsah organických látok `O` = 3%
+- Hustota porastu `H` = 4 stonky/m²
+
+Potom by ste mohli vypočítať `reproduction_rate` a `migration_param` takto:
+- `reproduction_rate` = `k * (V/Vopt) * (T/Topt) * (S/Sopt) * (pH/pHopt) * (O/Oopt)`
+- `migration_param` môže byť funkciou `H` a ďalších faktorov, napríklad `migration_param = f(H, V, T)` kde `f` je funkcia, ktorú si definujete na základe vašich poznatkov o šírení Pohánkovca.
+
+Tieto výpočty by vám mali poskytnúť základné hodnoty pre implementáciu modelu v C++.
