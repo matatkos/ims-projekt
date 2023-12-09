@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <valarray>
+#include <iostream>
 #include "grid.h"
 
 void Grid::set_params(double moisture, double temperature, double ph,
@@ -182,4 +183,21 @@ double Grid::diffusion_operator(int x, int y) {
     }
     diffusion -= count * this->present_grid[order_coords(x, y)].state;
     return diffusion;
+}
+
+void Grid::copy_future_to_present() {
+    for(int i = 0; i < this->width; i++){
+        for(int j = 0; j < this->width; j++){
+            this->present_grid[order_coords(i,j)].state = this->future_grid[order_coords(i,j)].state;
+        }
+    }
+}
+
+void Grid::print_present_grid() {
+    for(int i = 0; i < this->width; i++){
+        for(int j = 0; j < this->width; j++){
+            cout << this->present_grid[order_coords(i,j)].state << " ";
+        }
+        cout << std::endl;
+    }
 }

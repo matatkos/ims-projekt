@@ -221,6 +221,9 @@ IMS_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 IMS_SOURCE_DIR:STATIC=/home/matus/Desktop/3BIT/IMS
 
+//The directory containing a CMake configuration file for OpenCV.
+OpenCV_DIR:PATH=OpenCV_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries

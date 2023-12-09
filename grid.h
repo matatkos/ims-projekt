@@ -38,7 +38,7 @@ public:
             int max_population);
 
     void set_conditions();
-
+    int order_coords(int x, int y);;
 
     int width;
 
@@ -48,7 +48,7 @@ private:
     double diffusion_operator(int x, int y);
     void fill_present_grid(int xmin, int ymin, int width, double value);
     double rand_double(double min, double max);
-    int order_coords(int x, int y);;
+
 
     double moisture;
     double temperature;

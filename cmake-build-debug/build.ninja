@@ -67,6 +67,12 @@ build CMakeFiles/IMS.dir/grid.cpp.o: CXX_COMPILER__IMS_Debug /home/matus/Desktop
   OBJECT_DIR = CMakeFiles/IMS.dir
   OBJECT_FILE_DIR = CMakeFiles/IMS.dir
 
+build CMakeFiles/IMS.dir/image.cpp.o: CXX_COMPILER__IMS_Debug /home/matus/Desktop/3BIT/IMS/image.cpp || cmake_object_order_depends_target_IMS
+  DEP_FILE = CMakeFiles/IMS.dir/image.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/IMS.dir
+  OBJECT_FILE_DIR = CMakeFiles/IMS.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target IMS
@@ -75,7 +81,7 @@ build CMakeFiles/IMS.dir/grid.cpp.o: CXX_COMPILER__IMS_Debug /home/matus/Desktop
 #############################################
 # Link the executable IMS
 
-build IMS: CXX_EXECUTABLE_LINKER__IMS_Debug CMakeFiles/IMS.dir/main.cpp.o CMakeFiles/IMS.dir/cell.cpp.o CMakeFiles/IMS.dir/grid.cpp.o
+build IMS: CXX_EXECUTABLE_LINKER__IMS_Debug CMakeFiles/IMS.dir/main.cpp.o CMakeFiles/IMS.dir/cell.cpp.o CMakeFiles/IMS.dir/grid.cpp.o CMakeFiles/IMS.dir/image.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/IMS.dir
   POST_BUILD = :
