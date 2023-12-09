@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <valarray>
 #include "grid.h"
 
 void Grid::set_params(double moisture, double temperature, double ph,
@@ -147,7 +148,38 @@ void Grid::get_future_grid(int month) {
         for(int j = 0; j < this->width; j++){
             order = this->order_coords(i,j);
             state = present_grid[order].state;
-            
+            new_state = state + fertility * state + mortality * pow(state, 2) + diffusion_operator(i, j);
+            if (new_state < 0){
+                new_state = 0;
+            }
+            this->future_grid[order].state = new_state;
         }
     }
+    copy_future_to_present();
+}
+
+double Grid::diffusion_operator(int x, int y) {
+    double diffusion = 0;
+    int count = 0;
+    if(x > 0){
+        diffusion += this->present_grid[order_coords(x-1, y)].state;
+        count++;
+    }
+
+    if(x < this->width - 1){
+        diffusion += this->present_grid[order_coords(x+1, y)].state;
+        count++;
+    }
+
+    if(y > 0){
+        diffusion += this->present_grid[order_coords(x, y-1)].state;
+        count++;
+    }
+
+    if(y < this->width - 1){
+        diffusion += this->present_grid[order_coords(x, y+1)].state;
+        count++;
+    }
+    diffusion -= count * this->present_grid[order_coords(x, y)].state;
+    return diffusion;
 }

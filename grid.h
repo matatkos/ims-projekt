@@ -45,6 +45,7 @@ public:
 private:
     Cell get_present_cell(int x, int y);
     Cell get_future_cell(int x, int y);
+    double diffusion_operator(int x, int y);
     void fill_present_grid(int xmin, int ymin, int width, double value);
     double rand_double(double min, double max);
     int order_coords(int x, int y);;
