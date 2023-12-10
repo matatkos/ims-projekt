@@ -16,10 +16,9 @@ void Grid::set_params(double soil_moisture, double humidity, double temperature,
                                                           temperature,
                                                           humidity, 
                                                           sunlight);
-    //this->fertility = std::max(0.0, (1 - reproduction_rate));
-    //this->mortality = std::max(0.0, (-reproduction_rate / max_population));
-    this->fertility = 0.8;
-    this->mortality = 0.01;
+    this->fertility = (1 - reproduction_rate);
+    this->mortality = (-reproduction_rate/max_population);
+
 
 }
 
@@ -29,7 +28,7 @@ double Grid::calculate_reproduction_rate(int vegetation_density, double soil_moi
     double optimal_temperature = 20;
     double optimal_vegetation_density = 4;
     double optimal_sunlight = 6;
-    double optimal_humidity = 73;
+    double optimal_humidity = 60;
 
     double koef = 4*(1- (vegetation_density)/10);
     double reproduction = koef * (soil_moisture / optimal_soil_moisture) *
@@ -53,7 +52,7 @@ void Grid::init_present_grid() {
     }
 
     // Pridanie invazívnej rastliny
-    int num_invasive_plants = 150; // Počet invazívnych rastlín, ktoré sa majú pridať
+    int num_invasive_plants = (this->width * this->width) / 2000; // Počet invazívnych rastlín, ktoré sa majú pridať
     for(int n = 0; n < num_invasive_plants; n++) {
         int randx = rand() % this->width;
         int randy = rand() % this->width;
@@ -213,10 +212,9 @@ void Grid::get_future_grid(int month) {
             state = present_grid[order].state;
 
             if (state > 0.5) { // Invazívna rastlina
-                new_state = state + fertility * (1 - state) - mortality * pow(state, 2);
+                new_state = state + fertility * (1 - state) + mortality * pow(state, 2);
                 printf("VIAC new state: %f\n", new_state);
-                //if (new_state < 0.5) new_state = 0.0; // Invazívna rastlina zomrela, nastavte na mŕtvu/nakazenú vegetáciu
-                if (new_state < 0.5) new_state = 0.5;
+                if (new_state < 0.5) new_state = 0.0; // Invazívna rastlina zomrela, nastavte na mŕtvu/nakazenú vegetáciu
             } else { // Vegetácia
                 double infection_chance = 0.0;
                 int infected_neighbors = 0;
@@ -244,11 +242,11 @@ void Grid::get_future_grid(int month) {
                 // Aktualizujte stav bunky na základe šance na infekciu
                 new_state = state - infection_chance * fertility;
                 printf("MENEJ new state: %f\n", new_state);
-                //if (new_state < 0.2) new_state = rand_double(0.6, 0.8); // Ak vegetácia zomrie, nahraďte ju invazívnou rastlinou
+                if (new_state == 0) new_state = rand_double(0.51, 0.69); // Ak vegetácia zomrie, nahraďte ju invazívnou rastlinou
             }
 
-            if (new_state < 0) new_state = rand_double(0.1, 0.5);
-            if (new_state > 1) new_state = rand_double(0.51, 1);
+            if (new_state < 0) new_state = 0.1;
+            if (new_state > 1) new_state = 1;
             this->future_grid[order].state = new_state;
         }
     }

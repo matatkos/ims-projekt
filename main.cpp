@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     Image image(grid.width, grid.width);
 
     int month = 0;
-    for(int i = 0; i < 12; ++i){
+    for(int i = 0; i < 36; ++i){
         month = i % 12;
 
         grid.get_future_grid(month);
