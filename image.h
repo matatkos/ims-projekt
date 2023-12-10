@@ -12,14 +12,15 @@
 #include "grid.h"
 
 
-#define CELL_0 Scalar (0, 0, 0)
-#define CELL_1 Scalar (105,105,105)
-#define CELL_2 Scalar (128,128,128)
-#define CELL_3 Scalar (169,169,169)
-#define CELL_4 Scalar (224, 224, 224)
-#define CELL_5 Scalar (255, 255, 255)
-#define CELL_6 Scalar (255, 128,0)
-#define CELL_7 Scalar (255,110,0)
+#define CELL_0 Scalar(0, 0, 0)         // Čierna farba: prázdná/neaktívna bunka
+#define CELL_1 Scalar(0, 128, 0)       // Svetlozelená: nízka hustota vegetácie
+#define CELL_2 Scalar(0, 255, 0)       // Zelená: stredná hustota vegetácie
+#define CELL_3 Scalar(0, 140, 255)     // Svetlooranžová: nízka hustota inváznej rastliny
+#define CELL_4 Scalar(0, 69, 255)      // Oranžová: stredná hustota inváznej rastliny
+#define CELL_5 Scalar(0, 0, 255)       // Červená: vysoká hustota inváznej rastliny
+#define CELL_6 Scalar(0, 0, 139)       // Tmavočervená: veľmi vysoká hustota inváznej rastliny
+#define CELL_7 Scalar(0, 0, 255)       // Červená: maximálna hustota inváznej rastliny
+
 
 using namespace cv;
 

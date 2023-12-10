@@ -19,17 +19,17 @@ int main(int argc, char** argv) {
                         atof(argv[4]),
                         atof(argv[5]),
                         atoi(argv[6]),
-                        160000);
+                        1600000);
     }
     grid.init_present_grid();
     Image image(grid.width, grid.width);
 
     int month = 0;
-    for(int i = 0; i < 48; ++i){
+    for(int i = 0; i < 60; ++i){
         month = i % 12;
 
         grid.get_future_grid(month);
-        image.create_image(grid, 100, month, true);
+        image.create_image(grid, 650, month, true);
     }
     return 0;
 }

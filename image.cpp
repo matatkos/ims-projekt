@@ -25,37 +25,25 @@ double Image::round(double var) {
 }
 
 void Image::create_image(Grid grid, int wait_time, int month, bool show_window) {
-    Mat img = Mat(img_size.height, img_size.width, CV_8UC3, Scalar(255,255,255));
-    for(int i = 0; i<width; ++i){
-        for(int j = 0; j<height; ++j){
-            double state = round(grid.present_grid[grid.order_coords(i,j)].state);
-            if(state <= 0.02){
-                this->create_pixel(img, Point(i,j), CELL_0);
+    Mat img = Mat(img_size.height, img_size.width, CV_8UC3, Scalar(255, 255, 255));
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            double state = round(grid.present_grid[grid.order_coords(i, j)].state);
+            if (state == 0.0){
+                this->create_pixel(img, Point(i, j), CELL_0); // Čierna - prazdna bunka
             }
-            else if(state <= 0.05){
-                this->create_pixel(img, Point(i,j), CELL_1);
-            }
-            else if(state <= 0.10){
-                this->create_pixel(img, Point(i,j), CELL_2);
-            }
-            else if(state <= 0.20){
-                this->create_pixel(img, Point(i,j), CELL_3);
-            }
-            else if(state <= 0.30){
-                this->create_pixel(img, Point(i,j), CELL_4);
-            }
-            else if(state <= 0.40){
-                this->create_pixel(img, Point(i,j), CELL_5);
-            }
-            else if(state <= 0.50){
-                this->create_pixel(img, Point(i,j), CELL_6);
-            }
-            else{
-                this->create_pixel(img, Point(i,j), CELL_7);
+            else if (state > 0.0 && state <= 0.2) {
+                this->create_pixel(img, Point(i, j), CELL_1); // Svetlozelená - slaba hustota vegetacie
+            } else if (state > 0.2 && state <= 0.50) {
+                this->create_pixel(img, Point(i, j), CELL_2); // Zelená - silna hustota vegetacie
+            } else if (state > 0.5 && state <= 0.70) {
+                this->create_pixel(img, Point(i, j), CELL_3); // Svetlooranžová - slaba hustota invaznej rastliny
+            } else {
+                this->create_pixel(img, Point(i, j), CELL_5); // Červená - silna hustota invaznej rastliny
             }
         }
     }
-    if(show_window){
+    if (show_window) {
         imshow("Image", img);
     }
     waitKey(wait_time);
