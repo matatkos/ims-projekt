@@ -26,8 +26,8 @@ double Image::round(double var) {
 
 void Image::create_image(Grid grid, int wait_time, int month, bool show_window) {
     Mat img = Mat(img_size.height, img_size.width, CV_8UC3, Scalar(255, 255, 255));
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
+    for (unsigned long i = 0; i < width; ++i) {
+        for (unsigned long j = 0; j < height; ++j) {
             double state = round(grid.present_grid[grid.order_coords(i, j)].state);
             if (state == 0.0){
                 this->create_pixel(img, Point(i, j), CELL_0); // Čierna - prazdna bunka
@@ -43,6 +43,17 @@ void Image::create_image(Grid grid, int wait_time, int month, bool show_window) 
             }
         }
     }
+
+    std::string monthNames[] = {"Januar", "Februar", "Marec", "April", "Maj", "Jun", "Jul", "August", "September", "Oktober", "November", "December"};
+    std::string monthName = monthNames[month % 12];
+    Point textOrg(10, 30); // Pozícia textu v okne
+    int fontFace = FONT_HERSHEY_SIMPLEX;
+    double fontScale = 1;
+    int thickness = 2; // Hrúbka čiary
+    Scalar color(255, 255, 255); // Farba textu, napr. červená
+
+    putText(img, monthName, textOrg, fontFace, fontScale, color, thickness);
+
     if (show_window) {
         imshow("Image", img);
     }

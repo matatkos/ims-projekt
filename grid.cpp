@@ -3,51 +3,48 @@
 #include <iostream>
 #include "grid.h"
 
-void Grid::set_params(double moisture, double temperature, double ph,
-                      double biomass, double salinity,int vegetation_density,
-                      int max_population) {
-    this->moisture = moisture;
+void Grid::set_params(double soil_moisture, double humidity, double temperature,int vegetation_density,
+                      int max_population, double sunlight) {
+    this->soil_moisture = soil_moisture;
     this->temperature = temperature;
-    this->ph = ph;
-    this->biomass = biomass;
-    this->salinity = salinity;
     this->vegetation_density = vegetation_density;
     this->max_population = max_population;
+    this->sunlight = sunlight;	
+    this->humidity = humidity;
     this->reproduction_rate = calculate_reproduction_rate(vegetation_density,
-                                                          moisture,
+                                                          soil_moisture,
                                                           temperature,
-                                                          ph,
-                                                          biomass,
-                                                          salinity);
-    this->fertility = (1 - reproduction_rate);
-    this->mortality = (-reproduction_rate/max_population);
+                                                          humidity, 
+                                                          sunlight);
+    //this->fertility = std::max(0.0, (1 - reproduction_rate));
+    //this->mortality = std::max(0.0, (-reproduction_rate / max_population));
+    this->fertility = 0.8;
+    this->mortality = 0.01;
 
 }
 
-double Grid::calculate_reproduction_rate(int vegetation_density, double moisture,
-                                         double temperature, double ph,
-                                         double biomass, double salinity) {
-    double optimal_moisture = 40;
+double Grid::calculate_reproduction_rate(int vegetation_density, double soil_moisture,
+                                         double temperature, double humidity ,double sunlight) {
+    double optimal_soil_moisture = 40;
     double optimal_temperature = 20;
-    double optimal_ph = 7.0;
-    double optimal_biomass = 2;
-    double optimal_salinity = 0.7;
     double optimal_vegetation_density = 4;
+    double optimal_sunlight = 6;
+    double optimal_humidity = 73;
 
     double koef = 4*(1- (vegetation_density)/10);
-    printf("Koef: %f\n", koef);
-    double reproduction = koef * (moisture / optimal_moisture) *
+    double reproduction = koef * (soil_moisture / optimal_soil_moisture) *
                             (temperature / optimal_temperature) *
-                            (ph / optimal_ph) *
-                            (biomass / optimal_biomass) *
-                            (salinity / optimal_salinity) *
-                            (vegetation_density / optimal_vegetation_density);
-    printf("reproduction: %f\n", reproduction);
+                            (vegetation_density / optimal_vegetation_density) * 
+                            (sunlight / optimal_sunlight) *
+                            (humidity / optimal_humidity);
     return reproduction;
 }
 
+
 void Grid::init_present_grid() {
     // Inicializácia vegetácie
+    this->max_population = (this->width * this->width) * 4;
+    this->vegetation_density = 4;
     for(int i = 0; i < this->width; i++){
         for(int j = 0; j < this->width; j++){
             double vegetation_density = rand_double(0.1, 0.5); // Náhodná hustota vegetácie
@@ -56,11 +53,11 @@ void Grid::init_present_grid() {
     }
 
     // Pridanie invazívnej rastliny
-    int num_invasive_plants = 100; // Počet invazívnych rastlín, ktoré sa majú pridať
+    int num_invasive_plants = 150; // Počet invazívnych rastlín, ktoré sa majú pridať
     for(int n = 0; n < num_invasive_plants; n++) {
         int randx = rand() % this->width;
         int randy = rand() % this->width;
-        int index = order_coords(randx, randy);
+        std::vector<Cell>::size_type index = order_coords(randx, randy);
         if (index >= 0 && index < this->present_grid.size()) {
             this->present_grid[index].state = rand_double(0.51, 1); // Náhodná hustota invazívnej rastliny
         }
@@ -91,76 +88,123 @@ void Grid::get_future_grid(int month) {
     double new_state;
 
     if(month % 12 == 3 || month % 12 == 4 || month % 12 == 5){
-        double moisture_spring = rand_double(45, 50);
+        double soil_moisture_spring = rand_double(45, 50);
         double temperature_spring;
+        double sunlight_spring;
+        double humidity_spring;
         if(month % 12 == 3){
             printf("Marec\n");
-            temperature_spring = rand_double(5, 10);
+            temperature_spring = rand_double(-1, 8);
+            if (temperature_spring == 0) {
+                temperature_spring = 0.1;
+            }
+            sunlight_spring = rand_double(4.3, 5.6);
+            humidity_spring = rand_double(69, 75);
         }
         else if (month % 12 == 4){
             printf("April\n");
-            temperature_spring = rand_double(10, 15);
+            temperature_spring = rand_double(3, 15);
+            sunlight_spring = rand_double(5.6, 6.6);
+            humidity_spring = rand_double(69, 70);
         }
         else{
             printf("Maj\n");
-            temperature_spring = rand_double(15, 20);
+            temperature_spring = rand_double(8, 20);
+            sunlight_spring = rand_double(6.6, 7);
+            humidity_spring = rand_double(70, 72);
         }
-        set_params(moisture_spring, temperature_spring,
-                   ph, biomass, salinity, vegetation_density, max_population);
+        set_params(soil_moisture_spring, humidity_spring, temperature_spring,
+                   vegetation_density, max_population, sunlight_spring);
     }
     else if(month % 12 == 6 || month % 12 == 7 || month % 12 == 8){
-        double moisture_summer = rand_double(30, 35);
+        double soil_moisture_summer = rand_double(30, 35);
         double temperature_summer;
+        double sunlight_summer;
+        double humidity_summer;
         if(month % 12 == 6){
             printf("Jun\n");    
-            temperature_summer = rand_double(20, 23);
+            temperature_summer = rand_double(11, 23);
+            sunlight_summer = rand_double(7, 7.3);
+            humidity_summer = rand_double(70, 72);
         }
         else if (month % 12 == 7){
             printf("Jul\n");
-            temperature_summer = rand_double(24, 27);
+            temperature_summer = rand_double(13, 25);
+            sunlight_summer = rand_double(7, 7.3);
+            humidity_summer = rand_double(70, 72);
         }
         else{
             printf("Aug\n");
-            temperature_summer = rand_double(28, 30);
+            temperature_summer = rand_double(12, 25);
+            sunlight_summer = rand_double(6.9, 7.3);
+            humidity_summer = rand_double(72, 75);
         }
-        set_params(moisture_summer, temperature_summer,
-                   ph, biomass, salinity, vegetation_density, max_population);
+        set_params(soil_moisture_summer, humidity_summer, temperature_summer,
+                   vegetation_density, max_population, sunlight_summer);
     }
     else if(month % 12 == 9 || month % 12 == 10 || month % 12 == 11){
-        double moisture_autumn = rand_double(45, 50);
+        double soil_moisture_autumn = rand_double(45, 50);
         double temperature_autumn;
+        double sunlight_autumn;
+        double humidity_autumn;
         if(month % 12 == 9){
             printf("Sep\n");
-            temperature_autumn = rand_double(15, 25);
+            temperature_autumn = rand_double(8, 20);
+            sunlight_autumn = rand_double(4.7, 5.7);
+            humidity_autumn = rand_double(75, 77);
         }
         else if (month % 12 == 10){
             printf("Okt\n");
-            temperature_autumn = rand_double(10, 15);
+            temperature_autumn = rand_double(4, 14);
+            sunlight_autumn = rand_double(2.3, 4.7);
+            humidity_autumn = rand_double(77, 83);
         }
         else{
             printf("Nov\n");
-            temperature_autumn = rand_double(5, 10);
+            temperature_autumn = rand_double(0, 10);
+            if (temperature_autumn == 0) {
+                temperature_autumn = 0.1;
+            }
+            sunlight_autumn = rand_double(1.8, 2.3);
+            humidity_autumn = rand_double(83, 84);
         }
-        set_params(moisture_autumn, temperature_autumn,
-                   ph, biomass, salinity, vegetation_density, max_population);
+        set_params(soil_moisture_autumn, humidity_autumn, temperature_autumn,
+                   vegetation_density, max_population, sunlight_autumn);
     }
     else if(month % 12 == 0 || month % 12 == 1 || month % 12 == 2){
-        double moisture_winter = rand_double(30, 35);
+        double soil_moisture_winter = rand_double(30, 35);
         double temperature_winter;
+        double sunlight_winter;
+        double humidity_winter;
         if(month % 12 == 0){
             printf("Dec\n");
-            temperature_winter = rand_double(1, 5);
+            temperature_winter = rand_double(-4, 2);
+            if (temperature_winter == 0) {
+                temperature_winter = 0.1;
+            }
+            sunlight_winter = rand_double(1.8, 2.2);
+            humidity_winter = rand_double(83, 84);
         }
         else if (month % 12 == 1){
             printf("Jan\n");
-            temperature_winter = rand_double(1, 5);
+            temperature_winter = rand_double(-5, 2);
+            if (temperature_winter == 0) {
+                temperature_winter = 0.1;
+            }
+            sunlight_winter = rand_double(2.2, 3.2);
+            humidity_winter = rand_double(80, 83);
         }
         else{
             printf("Feb\n");
-            temperature_winter = rand_double(1, 5);
+            temperature_winter = rand_double(-5, 3);
+            if (temperature_winter == 0) {
+                temperature_winter = 0.1;
+            }
+            sunlight_winter = rand_double(3.2, 4.3);
+            humidity_winter = rand_double(75, 80);
         }
-        set_params(moisture_winter, temperature_winter,
-                   ph, biomass, salinity, vegetation_density, max_population);
+        set_params(soil_moisture_winter, humidity_winter, temperature_winter,
+                   vegetation_density, max_population, sunlight_winter);
     }
 
     for(int i = 0; i < this->width; i++){
@@ -169,8 +213,10 @@ void Grid::get_future_grid(int month) {
             state = present_grid[order].state;
 
             if (state > 0.5) { // Invazívna rastlina
-                new_state = state + fertility * (1 - state) + mortality * pow(state, 2) + diffusion_operator(i, j);
-                if (new_state < 0.5) new_state = 0.0; // Invazívna rastlina zomrela, nastavte na mŕtvu/nakazenú vegetáciu
+                new_state = state + fertility * (1 - state) - mortality * pow(state, 2);
+                printf("VIAC new state: %f\n", new_state);
+                //if (new_state < 0.5) new_state = 0.0; // Invazívna rastlina zomrela, nastavte na mŕtvu/nakazenú vegetáciu
+                if (new_state < 0.5) new_state = 0.5;
             } else { // Vegetácia
                 double infection_chance = 0.0;
                 int infected_neighbors = 0;
@@ -197,11 +243,12 @@ void Grid::get_future_grid(int month) {
 
                 // Aktualizujte stav bunky na základe šance na infekciu
                 new_state = state - infection_chance * fertility;
+                printf("MENEJ new state: %f\n", new_state);
                 //if (new_state < 0.2) new_state = rand_double(0.6, 0.8); // Ak vegetácia zomrie, nahraďte ju invazívnou rastlinou
             }
 
-            if (new_state < 0) new_state = 0;
-            if (new_state > 1) new_state = 1;
+            if (new_state < 0) new_state = rand_double(0.1, 0.5);
+            if (new_state > 1) new_state = rand_double(0.51, 1);
             this->future_grid[order].state = new_state;
         }
     }

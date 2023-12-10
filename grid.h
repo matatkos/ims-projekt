@@ -23,20 +23,17 @@ public:
     void get_future_grid(int month);
     void copy_future_to_present();
 
-    double calculate_reproduction_rate(int vegetation_density, double moisture,
-                                       double temperature, double ph,
-                                       double biomass, double salinity);
+    double calculate_reproduction_rate(int vegetation_density, double soil_moisture,
+                                    double temperature, double humidity ,double sunlight);
 
     vector<Cell> present_grid;
 
-    void set_params(
-            double moisture,
-            double temperature,
-            double ph,
-            double biomass,
-            double salinity,
-            int vegetation_density,
-            int max_population);
+    void set_params(double soil_moisture,
+                    double humidity, 
+                    double temperature,
+                    int vegetation_density,
+                    int max_population, 
+                    double sunlight);
 
     void set_conditions();
     int order_coords(int x, int y);;
@@ -51,11 +48,12 @@ private:
     double rand_double(double min, double max);
 
 
-    double moisture;
+    double soil_moisture;
     double temperature;
-    double ph;
-    double biomass;
-    double salinity;
+
+    double humidity;
+    double sunlight;
+    
     int vegetation_density;
     int max_population;
     double reproduction_rate;
